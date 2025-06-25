@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Extract version from tag
+      id: version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: SettleSheet ${{ steps.version.outputs.VERSION }}
+        body: |
+          ## SettleSheet ${{ steps.version.outputs.VERSION }}
+          
+          **Quick Install:**
+          ```bash
+          curl -sSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
+          ```
+          
+          **Manual Download:**
+          Download `SettleSheet.py` below and run:
+          ```bash
+          python SettleSheet.py
+          ```
+          
+          ## Features
+          - Works Everywhere: Excel, Google Sheets, LibreOffice – if it can open a spreadsheet, it can handle your financial drama
+          - Real-Time Collaboration: Upload to Google Sheets, share with your group, let everyone add expenses from their phone as they happen
+          - Zero Installation Required: Download a template and start using immediately – no coding, no apps, no hassle
+          - Multi-Currency Support: Because your European vacation involved at least 5 different currencies and you're still confused
+          - Optimized Settlements: Uses clever programming to minimize the number of transactions (because nobody wants to Venmo 47 different people)
+          - Pretty Colors: 6 visually appealing themes so your expense tracker can be as aesthetic as your Instagram
+          - Smart Formulas: Automatically calculates who owes what, supports subgroups such as writing "John, Sarah" instead of "All" in the expense participants field
+          - Real-Time Updates: Change an expense amount and watch the settlement calculations update instantly
+          
+          ## Requirements (for python install)
+          - Python 3.6 or later
+          - openpyxl
+          
+          ---
+          **Full documentation:** [README](https://github.com/${{ github.repository }}/blob/main/readme.md)
+        files: |
+          SettleSheet.py
+          install.sh
+        draft: false
+        prerelease: false

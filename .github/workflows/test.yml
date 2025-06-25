@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Test Python syntax
+      run: python -m py_compile SettleSheet.py
+    
+    - name: Verify script exists and is readable
+      run: |
+        ls -la SettleSheet.py
+        head -5 SettleSheet.py

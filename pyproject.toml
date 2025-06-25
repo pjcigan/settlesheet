@@ -1,0 +1,36 @@
+[project]
+name = "settlesheet"
+version = "1.0.0"
+description = "Spreadsheet-based group expense tracker and settlement generator."
+authors = [
+    { name = "Phil Cigan" }
+]
+license = { text = "CC-BY-SA-4.0" }
+readme = "readme.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+    "Topic :: Office/Business :: Financial :: Accounting",
+    "Development Status :: 5 - Production/Stable",
+]
+dependencies = [
+    "openpyxl>=3.0.0"
+]
+
+[project.scripts]
+settlesheet = "SettleSheet:create_expense_spreadsheet"
+
+[project.urls]
+Homepage = "https://github.com/pjcigan/settlesheet"
+Repository = "https://github.com/pjcigan/settlesheet"
+Issues = "https://github.com/pjcigan/settlesheet/issues"
+
+[tool.setuptools]
+# No packages, just a script
+py-modules = ["SettleSheet"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta" 
