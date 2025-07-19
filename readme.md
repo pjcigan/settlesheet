@@ -52,6 +52,10 @@ Download a template from [`/templates`](./templates/) folder - no other installa
 pip install settlesheet
 ```
 **Or clone from source:**
+```bash
+git clone https://github.com/pjcigan/settlesheet.git
+```
+
 
 # CLI Usage
 
@@ -71,8 +75,7 @@ settlesheet mysheet.xlsx --participants Alice Bob Charlie --theme dark --currenc
 - `--background_color`: Worksheet background color (optional)
 
 ## Exchange Rate Defaults
-- If you specify `--currencies` but not `--exchange_rates` **and** `--native USD`, the script uses 5-year average USD rates for common currencies, and 1.0 for others.
-- If `--native` is not USD, all unspecified exchange rates default to 1.0.
+- If you specify `--currencies` but not `--exchange_rates`, the script uses 5-year average USD rates for common currencies **if** `--native USD`.  Otherwise currencies without specified exchange rates are set to 1.0 by default.
 - Warnings/info messages will clarify which rates are used.
 
 ## Example
@@ -80,7 +83,7 @@ settlesheet mysheet.xlsx --participants Alice Bob Charlie --theme dark --currenc
 ```bash
 settlesheet eurotrip.xlsx --participants Alice Bob Charlie --theme bright --currencies EUR GBP JPY --native USD
 ```
-When exchange rates are not specified for the input currencies (and native is USD) by also using `--exchange_rates` ... , default average rates will be used for select common currencies. Otherwise, un-specified currencies have rates set to 1.0 by default.
+When exchange rates are not specified for the input currencies by also using `--exchange_rates` ..., and native currency is set to USD, default average rates will be used for select common currencies. Otherwise, un-specified currencies have rates set to 1.0 by default.
 
 ```bash
 settlesheet eurotrip.xlsx --participants Alice Bob Charlie --theme bright --currencies EUR GBP JPY --native EUR
@@ -127,7 +130,7 @@ pip install settlesheet
 ```bash
 git clone https://github.com/pjcigan/settlesheet.git
 cd settlesheet
-python SettleSheet.py
+python settlesheet.py
 ```
 
 *Dependencies: openpyxl (automatically installed with pip)*
@@ -212,9 +215,10 @@ Navigate to the expense table and start adding your expenses. Each row represent
 #### 3. **Adding More Expense Rows**
 
 When you need more rows:
-1. **Copy formulas down**: Select the last expense row and copy it down to create new rows
-2. **The formulas will automatically adjust** to the new row numbers
-3. **Or simply type in new rows** - the totals will update automatically
+1. **Insert new rows** 
+2. **Copy formulas down**: Select the last expense row and copy it down to create new rows
+3. **The formulas will automatically adjust** to the new row numbers
+
 
 #### 4. **Reading Your Results**
 

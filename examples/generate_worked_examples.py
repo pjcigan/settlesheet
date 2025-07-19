@@ -33,7 +33,7 @@ import openpyxl
 import os
 #import sys
 #sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
-from SettleSheet import create_expense_spreadsheet, create_optimized_settlement_formulas
+from settlesheet import create_expense_spreadsheet, create_optimized_settlement_formulas
 
 
 #os.makedirs("examples", exist_ok=True)

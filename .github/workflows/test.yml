@@ -19,9 +19,9 @@ jobs:
         python-version: '3.9'
     
     - name: Test Python syntax
-      run: python -m py_compile SettleSheet.py
+      run: python -m py_compile settlesheet.py
     
     - name: Verify script exists and is readable
       run: |
-        ls -la SettleSheet.py
-        head -5 SettleSheet.py
+        ls -la settlesheet.py
+        head -5 settlesheet.py

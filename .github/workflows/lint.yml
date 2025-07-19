@@ -19,4 +19,4 @@ jobs:
         python-version: '3.9'
     
     - name: Check Python syntax
-      run: python -m py_compile SettleSheet.py
+      run: python -m py_compile settlesheet.py

@@ -32,9 +32,9 @@ jobs:
           ```
           
           **Manual Download:**
-          Download `SettleSheet.py` below and run:
+          Download `settlesheet.py` below and run:
           ```bash
-          python SettleSheet.py
+          python settlesheet.py
           ```
           
           ## Features
@@ -54,7 +54,7 @@ jobs:
           ---
           **Full documentation:** [README](https://github.com/${{ github.repository }}/blob/main/readme.md)
         files: |
-          SettleSheet.py
+          settlesheet.py
           install.sh
         draft: false
         prerelease: false
