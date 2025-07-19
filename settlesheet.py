@@ -16,7 +16,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with this program.
 If not, see <https://www.gnu.org/licenses/>.
 """
-__version__ = "1.0"
+__version__ = "1.1.0"
 
 import openpyxl
 from openpyxl import Workbook
@@ -27,6 +27,7 @@ from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.utils import get_column_letter
 from openpyxl.comments import Comment
 import os
+import argparse
 
 
 def create_optimized_settlement_formulas(ws, participants, balance_row, participants_row, 
@@ -1978,7 +1979,8 @@ def create_expense_spreadsheet(filename="shared_expenses.xlsx",
     print(f"Spreadsheet created and saved as {filename}")
     print(f"Full path: {os.path.abspath(filename)}")
 
-if __name__ == "__main__":
+
+def generate_example_sheets():
     # Example: Domestic trip (no currency conversion)
     create_expense_spreadsheet(
         filename="domestic_trip.xlsx", 
@@ -2021,6 +2023,217 @@ if __name__ == "__main__":
     #         native_currency="USD",
     #         color_theme=color_theme,
     #     )
+
+# 5-year average exchange rates to USD for select common currencies (approximate, 2020-2025), for use as default exchange rates
+DEFAULT_5YR_AVG_EXCHANGE_RATES = {
+    'USD': 1.0,        # US Dollar
+    'EUR': 1.05,       # Euro
+    'GBP': 1.25,       # British Pound Sterling
+    'JPY': 0.0072,     # Japanese Yen (1/138.9 = 0.0072)
+    'AUD': 0.70,       # Australian Dollar
+    'CAD': 0.77,       # Canadian Dollar
+    'CHF': 1.05,       # Swiss Franc
+    'CNY': 0.15,       # Chinese Yuan (1/6.67 = 0.15)
+    'SEK': 0.10,       # Swedish Krona (1/10 = 0.10)
+    'NZD': 0.65,       # New Zealand Dollar
+    'MXN': 0.053,      # Mexican Peso (1/18.9 = 0.053)
+    'SGD': 0.74,       # Singapore Dollar
+    'HKD': 0.13,       # Hong Kong Dollar (1/7.7 = 0.13)
+    'NOK': 0.10,       # Norwegian Krone (1/10 = 0.10)
+    'KRW': 0.0008,     # South Korean Won (1/1250 = 0.0008)
+    'TRY': 0.10,       # Turkish Lira (1/10 = 0.10)
+    'INR': 0.012,      # Indian Rupee (1/83.3 = 0.012)
+    'RUB': 0.013,      # Russian Ruble (1/76.9 = 0.013)
+    'BRL': 0.20,       # Brazilian Real (1/5 = 0.20)
+    'ZAR': 0.055,      # South African Rand (1/18.2 = 0.055)
+    'DKK': 0.15,       # Danish Krone (1/6.67 = 0.15)
+    'PLN': 0.25,       # Polish Zloty (1/4 = 0.25)
+    'TWD': 0.032,      # Taiwan Dollar (1/31.25 = 0.032)
+    'THB': 0.029,      # Thai Baht (1/34.5 = 0.029)
+    'MYR': 0.23,       # Malaysian Ringgit (1/4.35 = 0.23)
+    'IDR': 0.000067,   # Indonesian Rupiah (1/14925 = 0.000067)
+    'CZK': 0.045,      # Czech Koruna (1/22.2 = 0.045)
+    'HUF': 0.0028,     # Hungarian Forint (1/357 = 0.0028)
+    'ILS': 0.29,       # Israeli Shekel (1/3.45 = 0.29)
+    'PHP': 0.018,      # Philippine Peso (1/55.6 = 0.018)
+    'AED': 0.27,       # UAE Dirham (1/3.67 = 0.27)
+    'SAR': 0.27,       # Saudi Riyal (1/3.75 = 0.27)
+    'COP': 0.00025,    # Colombian Peso (1/4000 = 0.00025)
+    'CLP': 0.0012,     # Chilean Peso (1/833 = 0.0012)
+    'ARS': 0.003,      # Argentine Peso (1/333 = 0.003)
+    'EGP': 0.032,      # Egyptian Pound (1/31.25 = 0.032)
+    'PKR': 0.0035,     # Pakistani Rupee (1/286 = 0.0035)
+    'VND': 0.000042,   # Vietnamese Dong (1/23810 = 0.000042)
+    'BDT': 0.009,      # Bangladeshi Taka (1/111 = 0.009)
+    'LKR': 0.0031,     # Sri Lankan Rupee (1/323 = 0.0031)
+    'NGN': 0.0015,     # Nigerian Naira (1/667 = 0.0015)
+    'KZT': 0.0022,     # Kazakhstani Tenge (1/455 = 0.0022)
+    'QAR': 0.27,       # Qatari Riyal (1/3.64 = 0.27)
+    'OMR': 2.60,       # Omani Rial
+    'KWD': 3.25,       # Kuwaiti Dinar
+    'BHD': 2.65,       # Bahraini Dinar
+    'JOD': 1.41,       # Jordanian Dinar
+    'MAD': 0.10,       # Moroccan Dirham (1/10 = 0.10)
+    'DZD': 0.0075,     # Algerian Dinar (1/133 = 0.0075)
+    'UAH': 0.027,      # Ukrainian Hryvnia (1/37 = 0.027)
+    'RON': 0.22,       # Romanian Leu (1/4.55 = 0.22)
+    'BGN': 0.56,       # Bulgarian Lev (1/1.79 = 0.56)
+    'HRK': 0.15,       # Croatian Kuna (1/6.67 = 0.15)
+    'ISK': 0.0073,     # Icelandic Krona (1/137 = 0.0073)
+    'PEN': 0.27,       # Peruvian Sol (1/3.7 = 0.27)
+    'UYU': 0.025,      # Uruguayan Peso (1/40 = 0.025)
+    'BOB': 0.14,       # Bolivian Boliviano (1/7.14 = 0.14)
+    'PYG': 0.00014,    # Paraguayan Guarani (1/7143 = 0.00014)
+    'GHS': 0.085,      # Ghanaian Cedi (1/11.8 = 0.085)
+    'KES': 0.007,      # Kenyan Shilling (1/143 = 0.007)
+    'TZS': 0.00040,    # Tanzanian Shilling (1/2500 = 0.00040)
+    'UGX': 0.00027,    # Ugandan Shilling (1/3700 = 0.00027)
+    'RSD': 0.009,      # Serbian Dinar (1/111 = 0.009)
+    'MKD': 0.018,      # Macedonian Denar (1/56 = 0.018)
+    'MDL': 0.056,      # Moldovan Leu (1/18 = 0.056)
+    'AZN': 0.59,       # Azerbaijani Manat (1/1.7 = 0.59)
+    'GEL': 0.36,       # Georgian Lari (1/2.78 = 0.36)
+    'BYN': 0.40,       # Belarusian Ruble (1/2.5 = 0.40)
+    'MZN': 0.016,      # Mozambican Metical (1/62.5 = 0.016)
+    'BAM': 0.55,       # Bosnia-Herzegovina Convertible Mark (1/1.82 = 0.55)
+    'ALL': 0.010,      # Albanian Lek (1/100 = 0.010)
+    'SRD': 0.027,      # Surinamese Dollar (1/37 = 0.027)
+    'TTD': 0.15,       # Trinidad and Tobago Dollar (1/6.67 = 0.15)
+    'JMD': 0.0065,     # Jamaican Dollar (1/154 = 0.0065)
+    'XOF': 0.0017,     # West African CFA Franc (1/588 = 0.0017)
+    'XAF': 0.0017,     # Central African CFA Franc (1/588 = 0.0017)
+    'CDF': 0.00040,    # Congolese Franc (1/2500 = 0.00040)
+    'ZMW': 0.045,      # Zambian Kwacha (1/22.2 = 0.045)
+    'MUR': 0.022,      # Mauritian Rupee (1/45.5 = 0.022)
+    'SCR': 0.073,      # Seychellois Rupee (1/13.7 = 0.073)
+    'MGA': 0.00022,    # Malagasy Ariary (1/4545 = 0.00022)
+    'MWK': 0.00060,    # Malawian Kwacha (1/1667 = 0.00060)
+    'BWP': 0.073,      # Botswana Pula (1/13.7 = 0.073)
+    'NAD': 0.055,      # Namibian Dollar (1/18.2 = 0.055)
+    'LSL': 0.055,      # Lesotho Loti (1/18.2 = 0.055)
+    'SZL': 0.055,      # Swazi Lilangeni (1/18.2 = 0.055)
+    'BND': 0.74,       # Brunei Dollar
+    'FJD': 0.44,       # Fijian Dollar (1/2.27 = 0.44)
+    'PGK': 0.27,       # Papua New Guinean Kina (1/3.7 = 0.27)
+    'SBD': 0.12,       # Solomon Islands Dollar (1/8.33 = 0.12)
+    'TOP': 0.42,       # Tongan Paʻanga (1/2.38 = 0.42)
+    'WST': 0.36,       # Samoan Tala (1/2.78 = 0.36)
+    'VUV': 0.0085,     # Vanuatu Vatu (1/118 = 0.0085)
+    'XPF': 0.0091,     # CFP Franc (1/110 = 0.0091)
+    'KMF': 0.0022,     # Comorian Franc (1/455 = 0.0022)
+    'DJF': 0.0056,     # Djiboutian Franc (1/179 = 0.0056)
+    'HTG': 0.0075,     # Haitian Gourde (1/133 = 0.0075)
+    'DOP': 0.017,      # Dominican Peso (1/58.8 = 0.017)
+    'GTQ': 0.13,       # Guatemalan Quetzal (1/7.7 = 0.13)
+    'HNL': 0.041,      # Honduran Lempira (1/24.4 = 0.041)
+    'NIO': 0.027,      # Nicaraguan Córdoba (1/37 = 0.027)
+    'CRC': 0.0019,     # Costa Rican Colón (1/526 = 0.0019)
+    'SVC': 0.11,       # Salvadoran Colón (1/9.09 = 0.11)
+    'PAB': 1.0,        # Panamanian Balboa
+    'BZD': 0.50,       # Belize Dollar (1/2 = 0.50)
+    'BBD': 0.50,       # Barbadian Dollar (1/2 = 0.50)
+    'BSD': 1.0,        # Bahamian Dollar
+    'KYD': 1.20,       # Cayman Islands Dollar (1/0.83 = 1.20)
+    'ANG': 0.56,       # Netherlands Antillean Guilder (1/1.79 = 0.56)
+    'AWG': 0.56,       # Aruban Florin (1/1.79 = 0.56)
+    'XCD': 0.37,       # East Caribbean Dollar (1/2.7 = 0.37)
+    'GYD': 0.0048,     # Guyanese Dollar (1/208 = 0.0048)
+    'BMD': 1.0,        # Bermudian Dollar
+    'CUP': 0.042,      # Cuban Peso (1/23.8 = 0.042)
+    'CUC': 1.0,        # Cuban Convertible Peso
+    'SYP': 0.00040,    # Syrian Pound (1/2500 = 0.00040)
+    'LBP': 0.00066,    # Lebanese Pound (1/1515 = 0.00066)
+    'SDG': 0.0017,     # Sudanese Pound (1/588 = 0.0017)
+    'SSP': 0.00077,    # South Sudanese Pound (1/1299 = 0.00077)
+    'YER': 0.0040,     # Yemeni Rial (1/250 = 0.0040)
+    'MOP': 0.12,       # Macanese Pataca (1/8.33 = 0.12)
+    'TND': 0.32,       # Tunisian Dinar (1/3.13 = 0.32)
+    'LYD': 0.21,       # Libyan Dinar (1/4.76 = 0.21)
+    'MRU': 0.025,      # Mauritanian Ouguiya (1/40 = 0.025)
+    'SOS': 0.0017,     # Somali Shilling (1/588 = 0.0017)
+    'ETB': 0.018,      # Ethiopian Birr (1/55.6 = 0.018)
+    'ERN': 0.067,      # Eritrean Nakfa (1/15 = 0.067)
+    'KGS': 0.011,      # Kyrgyzstani Som (1/91 = 0.011)
+    'TJS': 0.091,      # Tajikistani Somoni (1/11 = 0.091)
+    'UZS': 0.000082,   # Uzbekistani Soʻm (1/12195 = 0.000082)
+    'AFN': 0.012,      # Afghan Afghani (1/83.3 = 0.012)
+    'IRR': 0.000024,   # Iranian Rial (1/41667 = 0.000024)
+    'IQD': 0.00077,    # Iraqi Dinar (1/1299 = 0.00077)
+    'SHP': 1.25,       # Saint Helena Pound
+    'FKP': 1.25,       # Falkland Islands Pound
+    'GIP': 1.25,       # Gibraltar Pound
+    'BIF': 0.00035,    # Burundian Franc (1/2857 = 0.00035)
+    'MNT': 0.00029,    # Mongolian Tögrög (1/3448 = 0.00029)
+    'LAK': 0.000048,   # Lao Kip (1/20833 = 0.000048)
+    'KHR': 0.00024,    # Cambodian Riel (1/4167 = 0.00024)
+    'MMK': 0.00048,    # Myanmar Kyat (1/2083 = 0.00048)
+    'KPW': 0.0011,     # North Korean Won (1/909 = 0.0011)
+    'MRO': 0.0027,     # Mauritanian Ouguiya (old) (1/370 = 0.0027)
+    'GNF': 0.00011,    # Guinean Franc (1/9091 = 0.00011)
+    'XAG': 25.0,       # Silver Ounce
+    'XAU': 1900.0,     # Gold Ounce
+    'BTC': 80000.0,    # Bitcoin (1-year average, ~2024-2025)
+}
+
+if __name__ == "__main__":
+    
+    #generate_example_sheets()
+
+    parser = argparse.ArgumentParser(description="Generate a shared expenses spreadsheet.")
+    parser.add_argument("filename", type=str, help="Output Excel filename (e.g. mysheet.xlsx)")
+    parser.add_argument("--participants", nargs="+", type=str, help="List of participant names (e.g. --participants Bob Joe Mary)")
+    parser.add_argument("--theme", type=str, default="neutral", choices=["bright", "neutral", "sleek", "bold", "dark", "light"], help="Color theme for the spreadsheet")
+    parser.add_argument("--currencies", nargs="*", type=str, help="List of foreign currency codes (e.g. --currencies JPY GBP). If none specified, no foreign currencies will be used.")
+    parser.add_argument("--exchange_rates", nargs="*", type=float, help="List of exchange rates for the currencies, in the same order (e.g. --exchange_rates 0.0068 1.27). If none specified, all rates will be set to 1.0. Specify rates here as how many units of the native currency are in one unit of the foreign currency, e.g. 1.10 means 1 USD = 1.10 EUR.")
+    parser.add_argument("--native", type=str, default="USD", help="Native/base currency code (default: USD)")
+    parser.add_argument("--rows", type=int, default=60, help="Number of expense rows (default: 60)")
+    parser.add_argument("--background_color", type=str, default="auto", help="Background color for the spreadsheet (default: auto). Acceptable formats: hex (e.g. #FFFFFF), color name (e.g. white), or 'auto' (default).")
+    # Advanced/optional args can be added here
+
+    args = parser.parse_args()
+
+    # Prepare exchange_rates dict if currencies are provided
+    exchange_rates = None
+    if args.currencies:
+        # Only use 5-year USD rates if native currency is USD, else default to 1.0 for unspecified
+        use_usd_defaults = (args.native.upper() == 'USD')
+        if args.exchange_rates:
+            if len(args.exchange_rates) != len(args.currencies):
+                if use_usd_defaults:
+                    print("[WARNING] Number of exchange rates does not match number of currencies. For missing rates, 5-year averages will be used for select common currencies, and 1.0 for others.")
+                else:
+                    print("[WARNING] Number of exchange rates does not match number of currencies. For missing rates, 1.0 will be used.")
+            rates = list(args.exchange_rates) + [None] * (len(args.currencies) - len(args.exchange_rates))
+            rates = rates[:len(args.currencies)]
+            exchange_rates = {}
+            for code, rate in zip(args.currencies, rates):
+                if rate is not None:
+                    exchange_rates[code] = rate
+                else:
+                    if use_usd_defaults:
+                        exchange_rates[code] = DEFAULT_5YR_AVG_EXCHANGE_RATES.get(code.upper(), 1.0)
+                    else:
+                        exchange_rates[code] = 1.0
+        else:
+            if use_usd_defaults:
+                exchange_rates = {code: DEFAULT_5YR_AVG_EXCHANGE_RATES.get(code.upper(), 1.0) for code in args.currencies}
+                print("[INFO] No exchange rates provided. 5-year averages used for select common currencies, 1.0 for others. Edit the spreadsheet to update rates.")
+            else:
+                exchange_rates = {code: 1.0 for code in args.currencies}
+                print("[INFO] No exchange rates provided. All rates set to 1.0 (non-USD native currency). Edit the spreadsheet to update rates.")
+
+
+    create_expense_spreadsheet(
+        filename=args.filename,
+        participants=args.participants,
+        expense_rows=args.rows,
+        exchange_rates=exchange_rates,
+        native_currency=args.native,
+        color_theme=args.theme,
+        background_color=args.background_color
+    )
+
+
 
 """
 Example usage for SettleSheet.py

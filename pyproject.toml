@@ -1,6 +1,6 @@
 [project]
 name = "settlesheet"
-version = "1.0.0"
+version = "1.1.0"
 description = "Spreadsheet-based group expense tracker and settlement generator."
 authors = [
     { name = "Phil Cigan" }
@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [project.scripts]
-settlesheet = "SettleSheet:create_expense_spreadsheet"
+settlesheet = "settlesheet:create_expense_spreadsheet"
 
 [project.urls]
 Homepage = "https://github.com/pjcigan/settlesheet"
@@ -29,7 +29,7 @@ Issues = "https://github.com/pjcigan/settlesheet/issues"
 
 [tool.setuptools]
 # No packages, just a script
-py-modules = ["SettleSheet"]
+py-modules = ["settlesheet"]
 
 [build-system]
 requires = ["setuptools>=61.0"]

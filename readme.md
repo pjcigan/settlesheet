@@ -51,15 +51,43 @@ Download a template from [`/templates`](./templates/) folder - no other installa
 ```bash
 pip install settlesheet
 ```
-
 **Or clone from source:**
+
+# CLI Usage
+
+After installation, use the `settlesheet` command to generate a spreadsheet:
+
 ```bash
-git clone https://github.com/yourusername/settlesheet.git
-cd settlesheet  
-## Modify the script with desired sheet generation calls.
-## Then, run to generate sheets:
-python SettleSheet.py
+settlesheet mysheet.xlsx --participants Alice Bob Charlie --theme dark --currencies JPY GBP --native USD --rows 100
 ```
+
+- `mysheet.xlsx`: Output filename
+- `--participants`: List of participant names
+- `--theme`: Color theme (bright, neutral, sleek, bold, dark, light)
+- `--currencies`: List of foreign currency codes (optional)
+- `--exchange_rates`: List of exchange rates for the currencies, in the same order (optional)
+- `--native`: Native/base currency code (default: USD)
+- `--rows`: Number of expense rows (default: 60)
+- `--background_color`: Worksheet background color (optional)
+
+## Exchange Rate Defaults
+- If you specify `--currencies` but not `--exchange_rates` **and** `--native USD`, the script uses 5-year average USD rates for common currencies, and 1.0 for others.
+- If `--native` is not USD, all unspecified exchange rates default to 1.0.
+- Warnings/info messages will clarify which rates are used.
+
+## Example
+
+```bash
+settlesheet eurotrip.xlsx --participants Alice Bob Charlie --theme bright --currencies EUR GBP JPY --native USD
+```
+When exchange rates are not specified for the input currencies (and native is USD) by also using `--exchange_rates` ... , default average rates will be used for select common currencies. Otherwise, un-specified currencies have rates set to 1.0 by default.
+
+```bash
+settlesheet eurotrip.xlsx --participants Alice Bob Charlie --theme bright --currencies EUR GBP JPY --native EUR
+```
+This will set all rates to 1.0 unless you specify `--exchange_rates`.
+
+---
 
 ## Usage
 
@@ -97,7 +125,7 @@ pip install settlesheet
 
 **Method B: Clone from GitHub**
 ```bash
-git clone https://github.com/yourusername/settlesheet.git
+git clone https://github.com/pjcigan/settlesheet.git
 cd settlesheet
 python SettleSheet.py
 ```
